@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Huonelämpötilat (riisuttu)</title>
+    <style>
+      body { font-family: system-ui, Arial, sans-serif; margin: 16px; }
+      #log { white-space: pre-wrap; background:#f5f5f5; padding:8px; border-radius:8px; min-height: 60px; }
+      .row { display:flex; gap:.5rem; align-items:center; flex-wrap:wrap; }
+      canvas { max-width: 100%; }
+      table { border-collapse: collapse; width: 100%; margin-top: 8px; }
+      th, td { border-bottom: 1px solid #ddd; padding: 6px 8px; font-variant-numeric: tabular-nums; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  </head>
+  <body>
+    <h1>WebSocket + Webhook - demo (riisuttu)</h1>
+
+    <div class="row">
+      <span id="wsStatus">WS: ei yhdistetty</span>
+    </div>
+    <div id="log"></div>
+
+    <h2>Kaavio / API: /api/temperatures</h2>
+    <canvas id="chart" height="100"></canvas>
+
+    <h3>Viimeisimmät</h3>
+    <table>
+      <thead><tr><th>Aika</th><th>Laite</th><th>°C</th></tr></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+
+    <script>
+      const logEl = document.getElementById('log');
+      const wsStatus = document.getElementById('wsStatus');
+      const tbody = document.getElementById('tbody');
+
+      function log(t){ logEl.textContent += t + "\n"; }
+
+      let ws;
+      (function connectWS(){
+        const loc = window.location;
+        const proto = loc.protocol === 'https:' ? 'wss:' : 'ws:';
+        ws = new WebSocket(proto + '//' + loc.host);
+        ws.addEventListener('open', () => { wsStatus.textContent = 'WS: yhdistetty'; log('WS connected'); });
+        ws.addEventListener('close', () => { wsStatus.textContent = 'WS: suljettu'; log('WS closed'); });
+        ws.addEventListener('message', (ev) => {
+          try {
+            const msg = JSON.parse(ev.data);
+            if (msg.type === 'reading') {
+              addRow(msg.data);
+              addPoint(msg.data);
+            }
+          } catch {
+            log('WS raw: ' + ev.data);
+          }
+        });
+      })();
+
+      const ctx = document.getElementById('chart').getContext('2d');
+      const chart = new Chart(ctx, {
+        type: 'line',
+        data: { labels: [], datasets: [{ label: 'Lämpötila (°C)', data: [] }] },
+        options: { animation: false, scales: { x: { ticks: { autoSkip:true } } } }
+      });
+      function addPoint(r){
+        chart.data.labels.push(new Date(r.created_at));
+        chart.data.datasets[0].data.push(r.celsius);
+        if (chart.data.labels.length > 300) { chart.data.labels.shift(); chart.data.datasets[0].data.shift(); }
+        chart.update();
+      }
+      function addRow(r){
+        const tr = document.createElement('tr');
+        tr.innerHTML = '<td>' + new Date(r.created_at).toLocaleString() + '</td>' +
+                       '<td>' + (r.deviceId || 'device') + '</td>' +
+                       '<td>' + Number(r.celsius).toFixed(2) + '</td>';
+        tbody.prepend(tr);
+      }
+
+      fetch('/api/temperatures').then(r => r.json()).then(j => {
+        (j.rows || []).forEach(r => { addRow(r); addPoint(r); });
+      }).catch(e => log('API error: ' + e));
+    </script>
+  </body>
+</html>
