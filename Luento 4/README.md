@@ -31,12 +31,12 @@ node server.js
 - Avaa `http://localhost:8080` → `public/index.html`
 - Hakee alkuhistorian `/api/temperatures` ja kuuntelee WebSocketia uusille näytteille.
 
-## 3) ThingSpeak-demo (erillinen pikakokeilu)
+## 3) ThingSpeak
 - Avaa `public/fetch_temperature.js` ja korvaa muuttujaan suora linkki.
 - Avaa `public/fetch_temperature.html` selaimessa nähdäksesi JSONin.
 
 ## 4) Laite – MicroPython (Wokwi)
-`device/main.py` 
+`device/wokwi.py` 
 
 Muokkaa nämä:
 ```python
