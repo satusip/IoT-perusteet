@@ -11,7 +11,7 @@ Pipeline:
 │  ├─ fetch_temperature.html
 │  └─ fetch_temperature.js
 └─ device/
-   └─ main.py             
+   └─ wokwi.py             
 
 ## 1) Palvelin 
 ```bash
