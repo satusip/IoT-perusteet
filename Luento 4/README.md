@@ -12,8 +12,10 @@ Pipeline:
 │  └─ fetch_temperature.js
 └─ device/
    └─ wokwi.py             
-
-## 1) Palvelin 
+.
+```
+## 1) Palvelin
+ 
 ```bash
 npm init -y
 npm i express ws
