@@ -6,7 +6,7 @@ Tämä projekti sisältää eri luentojen harjoituskoodit ja materiaalit IoT-per
 - **Luento 1** – Python-esimerkkejä (LEDin ohjaus, hälytykset, sääasema).
 - **Luento 2** – Node.js-palvelin ja WiFi-ohjelmointi.
 - **Luento 3** – Node.js-palvelin (server2).
-- **Luento 4** – Tuntiharjoitukset sekä oma järjestelmä
+- **Luento 4** – Tuntiharjoitukset (fetch-, webhook- ja websocket-kansiot) sekä oma järjestelmä:
   - `device/` – laitteen ohjelmakoodi (Python)
   - `public/` – selainpohjainen käyttöliittymä  
   - `server.js` – palvelin
