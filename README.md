@@ -35,10 +35,18 @@ IoT-perusteet/
 ├── Luento 4/
 │ ├── device/
 │ │ └── wokwi.py
+│ ├── fetch/
+│ │ └── fetch_temperature.html
+│ │ └── fetch_temperature.js
 │ ├── public/
 │ │ ├── fetch_temperature.html
 │ │ ├── fetch_temperature.js
 │ │ └── index.html
+│ ├── webhook/
+│ │ └── server.js
+│ ├── websocket/
+│ │ └── client.html
+│ │ └── server2.js
 │ ├── server.js
 │ └── README.md
 │
